@@ -2,13 +2,11 @@
 This repo is created to save my vim config.
 
 # System Information
-- OS: macOS Big Sur (arm)
 - Vim Version: 8.0+，Neovim
-- Plugin Manager: Plugged // to 
-
+- Plugin Manager: Plugged 
 # Plugins
 - ariline
-- ycm
+- coc-vim
 - vim-sensible
 - ...
 
