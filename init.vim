@@ -1,30 +1,50 @@
 syntax on
 set relativenumber 
 set clipboard+=unnamed,unnamedplus
-set mouse=a
+set softtabstop=4
+set shiftwidth=4
+"set mouse=a
 set tabstop=4
-set shiftwidth=2
+set shiftwidth=4
 set showmatch
 set ruler
 set cursorline
 set hlsearch
 set incsearch
+let g:coc_disable_startup_warning=1
+
+" set c++ 11 support
+let g:syntastic_cpp_compiler_options = ' -std=c++11'
+" Markdown Preview
+let g:apc_enable_ft = {'text':1, 'markdown':1, 'php':1}
+
+set cpt=.,k,w,b
+
+set completeopt=menu,menuone,noselect
+
+set shortmess+=c
+
+autocmd BufNewFile *.cpp call SetInclude()
 
 call plug#begin('~/.vim/plugged')
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'neoclide/coc.nvim', {'branch':'release'}
 Plug 'jiangmiao/auto-pairs'
 Plug 'Yggdroot/indentLine'
 Plug 'iamcco/markdown-preview.vim', {'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'crusoexia/vim-monokai'
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'majutsushi/tagbar'
+Plug 'mbbill/undotree'
+Plug 'tpope/vim-fugitive'
+Plug 'neoclide/coc.nvim', {'branch':'release'}
+Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
 call plug#end()
+
+" snippet for oj code
 
 colorscheme monokai
 " airline config
@@ -58,6 +78,41 @@ nmap <leader>6 <Plug>AirlineSelectTab6
 nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
+nnoremap <F10> :call CompileAndRun()<CR>
+nnoremap <F9> :call Copy2Clipboard()<CR>
+
+func! Copy2Clipboard()
+	normal gg
+	normal 0
+	normal v
+	normal G
+	normal y
+endfunc
+
+func! CompileAndRun()
+	exec "w"
+	if &filetype == "c"
+		exec '!g++ --std=c++17 % -o %<'
+		exec '!./%< < in.txt'
+	elseif &filetype == "cpp"
+		exec '!g++ --std=c++17 % -o %<'
+		exec '!./%< < in.txt'
+	elseif &filetype == "py"
+		exec '!python %<.py < in.txt'
+	elseif &filetype == "sh"
+		exec '!sh %<.sh'
+	elseif &filetype == "go"
+		exec '!go run %<.go < in.txt'
+	endif
+endfunc
+
+func! SetInclude()
+	r /Users/zhiwayzhang/WorkSpace_Algorithm/template/template.cpp
+	normal gg
+	normal "_dd
+	normal 16j
+endfunc
+
 " 设置切换tab的快捷键 <\> + <-> 切换到前一个 tab
 nmap <leader>- <Plug>AirlineSelectPrevTab
 " 设置切换tab的快捷键 <\> + <+> 切换到后一个 tab
@@ -94,8 +149,10 @@ let g:NERDTreeHidden=0     "不显示隐藏文件
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 nnoremap <F3> :NERDTreeToggle<CR> " 开启/关闭nerdtree快捷键
-
+nnoremap dt :UndotreeToggle<CR> " enable undo tree 
 " tagbar config
 let g:tagbar_width=30
 nnoremap <silent> <F4> :TagbarToggle<CR> " 将tagbar的开关按键设置为 F4
+
+highlight Visual cterm=none ctermbg=darkgrey ctermfg=cyan
 
