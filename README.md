@@ -12,3 +12,6 @@ This repo is created to save my vim config.
 
 # zsh
 Oh my zsh
+
+# Windows 10
+Oh my posh
