@@ -49,8 +49,15 @@ Plug 'https://hub.fastgit.xyz/mbbill/undotree'
 Plug 'https://hub.fastgit.xyz/tpope/vim-fugitive'
 Plug 'https://hub.fastgit.xyz/neoclide/coc.nvim', {'branch':'release'}
 Plug 'https://hub.fastgit.xyz/fatih/vim-go', {'do': ':GoUpdateBinaries'}
+Plug 'https://hub.fastgit.xyz/ianding1/leetcode.vim'
 call plug#end()
 
+let g:leetcode_china=1
+let g:leetcode_browser='chrome'
+nnoremap <leader>ll :LeetCodeList<cr>
+nnoremap <leader>lt :LeetCodeTest<cr>
+nnoremap <leader>ls :LeetCodeSubmit<cr>
+nnoremap <leader>li :LeetCodeSignIn<cr>
 " snippet for oj code
 
 colorscheme monokai
@@ -87,6 +94,7 @@ nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 nnoremap <F10> :call CompileAndRun()<CR>
 nnoremap <F9> :call Copy2Clipboard()<CR>
+nnoremap <leader>lp :call SetInclude()<CR>
 
 func! Copy2Clipboard()
 	normal gg
@@ -106,8 +114,9 @@ func! CompileAndRun()
 		exec '!g++ --std=c++17 % -o %<.exe'
 		exec '!cat .\in.txt | %<.exe'
 		exec '!rm %<.exe'
-	elseif &filetype == "py"
-		exec '!cat .\in.txt | python %<.py'
+	elseif &filetype == "python"
+		exec '!echo "hello"'
+		exec '!cat .\in.txt | python3 %<.py'
 	elseif &filetype == "sh"
 		exec '!sh %<.sh'
 	elseif &filetype == "go"
@@ -116,7 +125,8 @@ func! CompileAndRun()
 endfunc
 
 func! SetInclude()
-	r D:\WorkSpace_Algorithm\template\template.cpp
+	echo '%'
+	r C:\Users\lenovo\WorkSpace_Algorithm\template\template.cpp
 	normal gg
 	normal "_dd
 	normal 16j
@@ -140,6 +150,18 @@ let g:airline_symbols.readonly = "RO"
 let g:airline_symbols.dirty = "DT"
 let g:airline_symbols.crypt = "CR" 
 
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 " nerdtree config
 " autocmd vimenter * NERDTree  "自动开启Nerdtree
 let g:NERDTreeWinSize = 25 "设定 NERDTree 视窗大小
